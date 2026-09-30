@@ -1,0 +1,26 @@
+# Dependabot version updates for the Go module, held back by a 7-day cooldown.
+#
+# Go has no native cooldown (no flag, no config file), so this bot is the only
+# place where a minimum release age can be applied to this module.
+#
+# Known limit: the cooldown applies to version updates only, and only to the
+# dependencies Dependabot proposes. Security updates arrive with no window, and
+# a transitive module raised by an update, or by a manual `go get` /
+# `go mod tidy`, is not checked against any window.
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # Days, for every update type: no semver-*-days key, so none waits less.
+    cooldown:
+      default-days: 7
+    # One PR per dependency, so that each update is judged, merged and reverted
+    # on its own. The exception is golang.org/x/*: those modules release
+    # together, and separate PRs conflict with each other in go.mod and go.sum.
+    groups:
+      golang-x:
+        patterns:
+          - golang.org/x/*
